@@ -1,0 +1,3 @@
+pythn --version [3.12.7]
+
+-Terminarea imatura a jocului, atunci cand diferenta de scor nu mai poate fi recuperata
