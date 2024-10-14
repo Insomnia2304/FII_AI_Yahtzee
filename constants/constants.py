@@ -11,7 +11,8 @@ points_table = [
     "Small Straight",
     "Large Straight",
     "Yahtzee",
-    "Chance"
+    "Chance",
+    "SCORE"
 ]
 
-initial_state = {'round_no': 0, 'points_table': [[[-1] * 13], [[-1] * 13]]}
+initial_state = {'round_no': 0, 'points_table': [[-1] * 13, [-1] * 13]}
