@@ -1,4 +1,4 @@
-import math
+import numpy as np
 
 import wx
 import wx.grid
@@ -9,7 +9,7 @@ from utils.gui_utils import alert_user
 dice = [1, 2, 3, 4, 5]
 keep_dice = []
 
-state = uic.initial_state
+state = uic.initial_state.copy()
 turns = -1
 
 class MyFrame(wx.Frame):
@@ -123,14 +123,16 @@ class MyFrame(wx.Frame):
             self.ai_move()
 
     def ai_move(self):
-        # TODO: implement AI random
-        global dice, turns
-        dice = dice_utils.dice_roll(5)
-        print(dice)
+        global dice, turns, keep_dice
+
+        roll_counts = np.random.randint(1, 4)
+        for i in range(roll_counts):
+            dice = dice_utils.dice_roll(len(dice))
+            self.update_dice_container(self.dice_container, dice)
+            
         turns += 1
         self.update_dice_container(self.dice_container, dice)
-        wx.CallLater(1250,lambda: self.update_score(math.floor(state['round_no'] / 2), 1))
-
+        wx.CallLater(1250, lambda: self.update_score(np.random.choice([index for index in range(13) if state['points_table'][1][index] == -1]), 1))
 
     def update_score(self, row: int, player: int):
         global dice
