@@ -134,10 +134,16 @@ class MyFrame(wx.Frame):
             np.random.choice([index for index in range(13) if state['points_table'][1][index] == -1]), 1))
 
     def roll_dice_for_ai(self):
-        global dice
+        global dice, keep_dice
         dice = dice_utils.dice_roll(len(dice))
-        self.update_dice_container(self.dice_container, dice)
+        new_keep_dice = dice_utils.choose_dice(dice)
+        for i in range(len(new_keep_dice)):
+            dice.remove(new_keep_dice[i])
+        keep_dice += new_keep_dice
+        print(dice, keep_dice)
 
+        self.update_dice_container(self.dice_container, dice)
+        self.update_dice_container(self.keep_dice_container, keep_dice, keep=True)
 
     def update_score(self, row: int, player: int):
         global dice
