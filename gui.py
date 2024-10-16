@@ -123,16 +123,21 @@ class MyFrame(wx.Frame):
             self.ai_move()
 
     def ai_move(self):
-        global dice, turns, keep_dice
+        global dice, keep_dice
 
         roll_counts = np.random.randint(1, 4)
         for i in range(roll_counts):
-            dice = dice_utils.dice_roll(len(dice))
-            self.update_dice_container(self.dice_container, dice)
-            
-        turns += 1
+            wx.CallLater(1250 * (i + 1), self.roll_dice_for_ai)
+
+        # Delay the score update until after all rolls are complete
+        wx.CallLater(1250 * (roll_counts + 1), lambda: self.update_score(
+            np.random.choice([index for index in range(13) if state['points_table'][1][index] == -1]), 1))
+
+    def roll_dice_for_ai(self):
+        global dice
+        dice = dice_utils.dice_roll(len(dice))
         self.update_dice_container(self.dice_container, dice)
-        wx.CallLater(1250, lambda: self.update_score(np.random.choice([index for index in range(13) if state['points_table'][1][index] == -1]), 1))
+
 
     def update_score(self, row: int, player: int):
         global dice

@@ -1,3 +1,4 @@
 python --version [3.12.7]
 
 -Terminarea prematura a jocului, atunci cand diferenta de scor nu mai poate fi recuperata
+-mutat logica AI-ului in alt script
