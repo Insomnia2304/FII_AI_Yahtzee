@@ -8,7 +8,7 @@ def choose_dice(dice: list[int]) -> list[int]:
     return [dice[i] for i in indexes]
 
 def validate_choice(dice: list[int], choice: int) -> int:
-    if 0 <= choice and choice <= 5:
+    if 0 <= choice <= 5:
         return dice.count(choice + 1) * (choice + 1)
     match choice:
         case 6: # Three of a kind
@@ -27,10 +27,3 @@ def validate_choice(dice: list[int], choice: int) -> int:
             return sum(dice)
         case _: # Invalid choice
             return -1
-
-def get_scores(points_table: list[list[int]]) -> list[int]:
-    ans = [0, 0]
-    for i in range(2):
-        ans[i] = sum([_ for _ in points_table[i] if _ != -1])
-        ans[i] += 35 if sum(points_table[i][0:6]) >= 63 else 0
-    return ans
