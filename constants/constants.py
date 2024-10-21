@@ -5,8 +5,8 @@ points_table_labels = [
     "Fours",
     "Fives",
     "Sixes",
-    "BONUS",
     "SUM",
+    "BONUS",
     "Three of a Kind",
     "Four of a Kind",
     "Full House",
@@ -24,6 +24,8 @@ initial_state = {
     'points_table': [[-1,-1,-1,-1,-1,-1,0,0,-1,-1,-1,-1,-1,-1,-1,0], [-1,-1,-1,-1,-1,-1,0,0,-1,-1,-1,-1,-1,-1,-1,0]]
 }
 
-BONUS_ROW = 6
-SUM_ROW = 7
+SUM_ROW = 6
+BONUS_ROW = 7
 SCORE_ROW = 15
+
+AI_SLEEP_TIME  = 1250 # ms

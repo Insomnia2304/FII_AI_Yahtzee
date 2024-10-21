@@ -2,12 +2,6 @@ from constants.constants import *
 from utils import dice_utils, gui_utils
 import wx
 
-def get_scores(state) -> list[int]:
-    scores = []
-    for i in range(2):
-        scores[i] = state['first_half'][i] + state['second_half'][i] + state['bonus'][i]
-    return scores
-
 def set_initial_state():
     state = initial_state.copy()
     dice = [1, 2, 3, 4, 5]

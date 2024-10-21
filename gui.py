@@ -102,10 +102,8 @@ class MyFrame(wx.Frame):
         global dice, keep_dice, state, dice_rolls
         state['round_no'] += 1
         if game.is_final_state(state):
-            scores = game.get_scores(state['points_table'])
-            self.grid.SetCellValue(13, 0, str(scores[0]))
-            self.grid.SetCellValue(13, 1, str(scores[1]))
-            alert_user(f"Game Over!\nYou: {scores[0]}\nAI: {scores[1]}")
+            alert_user(f"Game Over!\nYou: {state['points_table'][0][uic.SCORE_ROW]}\nAI: {state['points_table'][1][uic.SCORE_ROW]}")
+            self.Close()
             return
         dice = [1, 2, 3, 4, 5]
         keep_dice = []
@@ -125,11 +123,11 @@ class MyFrame(wx.Frame):
 
         roll_counts = np.random.randint(1, 4)
         for i in range(roll_counts):
-            wx.CallLater(1250 * (i + 1), self.roll_dice_for_ai)
+            wx.CallLater(uic.AI_SLEEP_TIME * (i + 1), self.roll_dice_for_ai)
 
         # Delay the score update until after all rolls are complete
         choice = np.random.choice([index for index in uic.SCORE_ROWS if state['points_table'][1][index] == -1])
-        wx.CallLater(1250 * (roll_counts + 1), lambda:
+        wx.CallLater(uic.AI_SLEEP_TIME * (roll_counts + 1), lambda:
                      game.update_score(state, self, choice, 1, dice, keep_dice))
 
     def roll_dice_for_ai(self):
