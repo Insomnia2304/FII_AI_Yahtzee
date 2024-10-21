@@ -1,5 +1,6 @@
 python --version [3.12.7]
 
 -Terminarea prematura a jocului, atunci cand diferenta de scor nu mai poate fi recuperata
--mutat logica AI-ului in alt script
--calcul de suma partiala 
+-Mutat logica AI-ului in alt script
+-[DONE] Calcul de suma partiala
+-[FIXED] Ai pare sa nu aleaga niciodata si ultimul zar

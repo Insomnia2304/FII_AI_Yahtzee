@@ -1,5 +1,5 @@
 from constants.constants import *
-from utils import dice_utils
+from utils import dice_utils, gui_utils
 
 def get_scores(state) -> list[int]:
     scores = []
@@ -19,13 +19,20 @@ def is_final_state(state) -> bool:
 
 def update_score(state, game, row, player, dice, keep_dice):
     total_dice = dice + keep_dice
+
     score = dice_utils.validate_choice(total_dice, row)
     state['points_table'][player][row] = score
+
+    if 0 <= row <= 5:
+        state['points_table'][player][SUM_ROW] += score
+        game.grid.SetCellValue(SUM_ROW, player, str(state['points_table'][player][SUM_ROW]))
+        if state['points_table'][player][SUM_ROW] >= 63:
+            state['points_table'][player][BONUS_ROW] = 35
+            state['points_table'][player][SCORE_ROW] += 35
+            game.grid.SetCellValue(BONUS_ROW, player, str(state['points_table'][player][BONUS_ROW]))
+    state['points_table'][player][SCORE_ROW] += score
+
     game.grid.SetCellValue(row, player, str(score))
-    if 0 <= row < 6:
-        state['first_half'][player] += score
-        if state['first_half'][player] >= 63:
-            state['bonus'][player] = 35
-    elif 6 <= row < 13:
-        state['second_half'][player] += score
+    game.grid.SetCellValue(SCORE_ROW, player, str(state['points_table'][player][SCORE_ROW]))
+
     game.next_round()
