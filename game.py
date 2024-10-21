@@ -1,5 +1,6 @@
 from constants.constants import *
 from utils import dice_utils, gui_utils
+import wx
 
 def get_scores(state) -> list[int]:
     scores = []
@@ -36,3 +37,17 @@ def update_score(state, game, row, player, dice, keep_dice):
     game.grid.SetCellValue(SCORE_ROW, player, str(state['points_table'][player][SCORE_ROW]))
 
     game.next_round()
+
+def display_potential_scores(state, game, dice, keep_dice):
+    total_dice = dice + keep_dice
+
+    for row in SCORE_ROWS:
+        if state['points_table'][0][row] == -1:
+            game.grid.SetCellValue(row, 0, str(dice_utils.validate_choice(total_dice, row)))
+            game.grid.SetCellTextColour(row, 0, wx.RED)
+
+def undisplay_potential_scores(state, game):
+    for row in SCORE_ROWS:
+        if state['points_table'][0][row] == -1:
+            game.grid.SetCellValue(row, 0, "")
+            game.grid.SetCellTextColour(row, 0, wx.BLACK)

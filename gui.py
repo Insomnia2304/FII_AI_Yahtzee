@@ -148,11 +148,12 @@ class MyFrame(wx.Frame):
         if dice_rolls == -1:
             alert_user("Please roll the dice first")
             return
-        if row not in [0,1,2,3,4,5,8,9,10,11,12,13,14]:
+        if row not in uic.SCORE_ROWS:
             return
         if state['points_table'][0][row] != -1:
             alert_user("You have already chosen this category")
             return
+        game.undisplay_potential_scores(state, self)
         update_score(state, self, row, 0, dice, keep_dice)
         event.Skip()
 
@@ -181,14 +182,16 @@ class MyFrame(wx.Frame):
     def on_roll_button(self, event):
         global dice, dice_rolls
         if state['round_no'] % 2 == 1:
-            event.Skip()
             return
         if dice_rolls > 1:
             alert_user("You have already rolled the dice 2 times")
-        else:
-            dice = dice_utils.dice_roll(len(dice))
-            self.update_dice_container(self.dice_container, dice)
-            dice_rolls += 1
+            return
+
+        dice = dice_utils.dice_roll(len(dice))
+        self.update_dice_container(self.dice_container, dice)
+        dice_rolls += 1
+
+        game.display_potential_scores(state, self, dice, keep_dice)
         self.game_info.Label = f"You can roll the dice {2 - dice_rolls} more times" if dice_rolls < 2 else "Please choose a category"
         self.vbox2.Layout()
         event.Skip()
