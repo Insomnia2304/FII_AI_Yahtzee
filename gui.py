@@ -27,6 +27,8 @@ class MyFrame(wx.Frame):
                 self.grid.SetReadOnly(row, col, True)
 
         self.grid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.on_cell_select)
+        self.grid.Bind(wx.EVT_KEY_DOWN, self.on_key_press)
+                
     def __init__(self, *args, **kw):
         super(MyFrame, self).__init__(*args, **kw)
 
@@ -194,6 +196,12 @@ class MyFrame(wx.Frame):
         self.vbox2.Layout()
         event.Skip()
 
+    def on_key_press(self, event):
+        match event.KeyCode:
+            case 82: # R key
+                self.on_roll_button(event)
+            case _:
+                event.Skip()
 
 class MyApp(wx.App):
     def __init__(self, redirect=False, filename=None, useBestVisual=False, clearSigInt=True):
