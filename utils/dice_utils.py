@@ -3,9 +3,9 @@ import numpy as np
 def dice_roll(no_of_dice: int) -> list[int]:
     return np.random.randint(1, 7, no_of_dice).tolist()
 
-def choose_dice(dice: list[int]) -> list[int]:
+def choose_dice(dice: list[int]) -> tuple[list[int], list[int]]:
     indexes = np.random.choice(range(len(dice)), np.random.randint(len(dice) + 1), replace=False)
-    return [dice[i] for i in indexes]
+    return [x for x in dice if dice.index(x) not in indexes], [x for x in dice if dice.index(x) in indexes]
 
 def validate_choice(dice: list[int], choice: int) -> int:
     if 0 <= choice <= 5:

@@ -126,8 +126,6 @@ class MyFrame(wx.Frame):
         roll_counts = np.random.randint(1, 4)
         for i in range(roll_counts):
             wx.CallLater(1250 * (i + 1), self.roll_dice_for_ai)
-            if len(dice) == 0:
-                break
 
         # Delay the score update until after all rolls are complete
         choice = np.random.choice([index for index in range(13) if state['points_table'][1][index] == -1])
@@ -136,11 +134,8 @@ class MyFrame(wx.Frame):
 
     def roll_dice_for_ai(self):
         global dice, keep_dice
-        dice = dice_utils.dice_roll(len(dice))
-        new_keep_dice = dice_utils.choose_dice(dice)
-        for i in range(len(new_keep_dice)):
-            dice.remove(new_keep_dice[i])
-        keep_dice += new_keep_dice
+        dice, new = dice_utils.choose_dice(dice)
+        keep_dice += new
         print(dice, keep_dice)
 
         self.update_dice_container(self.dice_container, dice)
@@ -150,12 +145,12 @@ class MyFrame(wx.Frame):
         row, col = event.GetRow(), event.GetCol()
         if state['round_no'] % 2 == 1 or col != 0:
             return
-        elif dice_rolls == -1:
+        if dice_rolls == -1:
             alert_user("Please roll the dice first")
             return
         if row not in [0,1,2,3,4,5,8,9,10,11,12,13,14]:
             return
-        elif state['points_table'][0][row] != -1:
+        if state['points_table'][0][row] != -1:
             alert_user("You have already chosen this category")
             return
         update_score(state, self, row, 0, dice, keep_dice)
