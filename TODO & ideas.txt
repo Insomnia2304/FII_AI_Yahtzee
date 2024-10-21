@@ -3,4 +3,5 @@ python --version [3.12.7]
 -Terminarea prematura a jocului, atunci cand diferenta de scor nu mai poate fi recuperata
 -Mutat logica AI-ului in alt script
 -[DONE] Calcul de suma partiala
--[FIXED] Ai pare sa nu aleaga niciodata si ultimul zar
+-[FIXED] AI pare sa nu aleaga niciodata si ultimul zar
+-Implement multiple YAHTZEES logic
