@@ -13,6 +13,7 @@ dice, keep_dice, state, dice_rolls = game.set_initial_state()
 class MyFrame(wx.Frame):
     def make_table(self):
         self.grid.CreateGrid(len(uic.points_table_labels), 2)
+        self.grid.SetDefaultCellAlignment(horiz=wx.ALIGN_CENTRE, vert=wx.ALIGN_CENTRE)
         self.grid.RowLabelSize = 150
 
         self.grid.SetColLabelValue(0, "You")
@@ -25,6 +26,15 @@ class MyFrame(wx.Frame):
         for row in range(len(uic.points_table_labels)):
             for col in range(2):
                 self.grid.SetReadOnly(row, col, True)
+
+        for col in range(2):
+            self.grid.SetCellBackgroundColour(uic.SUM_ROW, col, wx.Colour(210, 248, 210))
+            self.grid.SetCellBackgroundColour(uic.BONUS_ROW, col, wx.Colour(210, 248, 210))
+            self.grid.SetCellBackgroundColour(uic.SCORE_ROW, col, wx.Colour(177, 156, 217))
+
+            self.grid.SetCellValue(uic.SUM_ROW, col, str(state['points_table'][col][uic.SUM_ROW]))
+            self.grid.SetCellValue(uic.BONUS_ROW, col, str(state['points_table'][col][uic.BONUS_ROW]))
+            self.grid.SetCellValue(uic.SCORE_ROW, col, str(state['points_table'][col][uic.SCORE_ROW]))
 
         self.grid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.on_cell_select)
         self.grid.Bind(wx.EVT_KEY_DOWN, self.on_key_press)
@@ -134,6 +144,8 @@ class MyFrame(wx.Frame):
 
     def roll_dice_for_ai(self):
         global dice, keep_dice
+        
+        dice = dice_utils.dice_roll(len(dice))
         dice, new = dice_utils.choose_dice(dice)
         keep_dice += new
         print(dice, keep_dice)

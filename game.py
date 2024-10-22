@@ -20,14 +20,15 @@ def update_score(state, game, row, player, dice, keep_dice):
 
     if 0 <= row <= 5:
         state['points_table'][player][SUM_ROW] += score
-        game.grid.SetCellValue(SUM_ROW, player, str(state['points_table'][player][SUM_ROW]))
         if state['points_table'][player][SUM_ROW] >= 63:
             state['points_table'][player][BONUS_ROW] = 35
             state['points_table'][player][SCORE_ROW] += 35
-            game.grid.SetCellValue(BONUS_ROW, player, str(state['points_table'][player][BONUS_ROW]))
+            
     state['points_table'][player][SCORE_ROW] += score
 
     game.grid.SetCellValue(row, player, str(score))
+    game.grid.SetCellValue(SUM_ROW, player, str(state['points_table'][player][SUM_ROW]))
+    game.grid.SetCellValue(BONUS_ROW, player, str(state['points_table'][player][BONUS_ROW]))
     game.grid.SetCellValue(SCORE_ROW, player, str(state['points_table'][player][SCORE_ROW]))
 
     game.next_round()
