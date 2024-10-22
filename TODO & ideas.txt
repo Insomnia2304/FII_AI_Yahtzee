@@ -4,6 +4,7 @@ python --version [3.12.7]
 -Mutat logica AI-ului in alt script
 -[DONE] Calcul de suma partiala
 -[FIXED] AI pare sa nu aleaga niciodata si ultimul zar
--YAHTZEE-uri multiple
+-[DONE] YAHTZEE-uri multiple
 -Gasirea unei modalitati de a opri loop-ul de aruncare multipla a zarurilor din AI in cazul in care a ales deja toate zarurile
 -[DONE] Afisarea de scoruri potentiale (cu rosu) pentru fiecare casuta
+- Adaugarea unui rand nou pentru Yahzee-uri multiple (bonusul)

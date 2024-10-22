@@ -2,6 +2,7 @@ from constants.constants import *
 from utils import dice_utils, gui_utils
 import wx
 
+
 def set_initial_state():
     state = initial_state.copy()
     dice = [1, 2, 3, 4, 5]
@@ -9,11 +10,24 @@ def set_initial_state():
     dice_rolls = -1
     return dice, keep_dice, state, dice_rolls
 
+
 def is_final_state(state) -> bool:
     return state['round_no'] == 26
 
+
 def update_score(state, game, row, player, dice, keep_dice):
     total_dice = dice + keep_dice
+    is_yahtzee = len(set(total_dice)) == 1  # checking whether all dice are the same
+
+    print(f"Player {player} chose {points_table_labels[row]}")
+    print(state['points_table'][player][SCORE_ROW])
+
+    # Yahtzee bonus
+    if state['points_table'][player][SCORE_ROW] != 0 and is_yahtzee:
+        print(state['points_table'][player][SCORE_ROW])
+        print("Yahtzee bonus!")
+        state['points_table'][player][SCORE_ROW] += 100
+        game.grid.SetCellValue(SCORE_ROW, player, str(state['points_table'][player][SCORE_ROW]))
 
     score = dice_utils.validate_choice(total_dice, row)
     state['points_table'][player][row] = score
@@ -23,7 +37,7 @@ def update_score(state, game, row, player, dice, keep_dice):
         if state['points_table'][player][SUM_ROW] >= 63:
             state['points_table'][player][BONUS_ROW] = 35
             state['points_table'][player][SCORE_ROW] += 35
-            
+
     state['points_table'][player][SCORE_ROW] += score
 
     game.grid.SetCellValue(row, player, str(score))
@@ -33,13 +47,20 @@ def update_score(state, game, row, player, dice, keep_dice):
 
     game.next_round()
 
+
 def display_potential_scores(state, game, dice, keep_dice):
     total_dice = dice + keep_dice
+    is_yahtzee = len(set(total_dice)) == 1
 
     for row in SCORE_ROWS:
         if state['points_table'][0][row] == -1:
             game.grid.SetCellValue(row, 0, str(dice_utils.validate_choice(total_dice, row)))
             game.grid.SetCellTextColour(row, 0, wx.RED)
+
+    if is_yahtzee and state['points_table'][0][13] != -1:
+        game.grid.SetCellValue(SCORE_ROW, 0, "+100 Bonus")
+        game.grid.SetCellTextColour(SCORE_ROW, 0, wx.BLUE)
+
 
 def undisplay_potential_scores(state, game):
     for row in SCORE_ROWS:
