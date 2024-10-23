@@ -10,6 +10,7 @@ from utils.gui_utils import alert_user
 
 dice, keep_dice, state, dice_rolls = game.set_initial_state()
 
+
 class MyFrame(wx.Frame):
     def make_table(self):
         self.grid.CreateGrid(len(uic.points_table_labels), 2)
@@ -38,7 +39,7 @@ class MyFrame(wx.Frame):
 
         self.grid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.on_cell_select)
         self.grid.Bind(wx.EVT_KEY_DOWN, self.on_key_press)
-                
+
     def __init__(self, *args, **kw):
         super(MyFrame, self).__init__(*args, **kw)
 
@@ -103,7 +104,7 @@ class MyFrame(wx.Frame):
                 static_bitmap = wx.StaticBitmap(self.panel, bitmap=bitmap)
                 if state['round_no'] % 2 == 0:
                     static_bitmap.Bind(wx.EVT_LEFT_DOWN,
-                                   lambda event, val=die: self.on_image_click(event, val, keep))
+                                       lambda event, val=die: self.on_image_click(event, val, keep))
                 container.Add(static_bitmap, 0, wx.CENTER, 5)
                 if i != len(dice) - 1:
                     container.AddSpacer(10)
@@ -114,21 +115,23 @@ class MyFrame(wx.Frame):
         global dice, keep_dice, state, dice_rolls
         state['round_no'] += 1
         if game.is_final_state(state):
-            alert_user(f"Game Over!\nYou: {state['points_table'][0][uic.SCORE_ROW]}\nAI: {state['points_table'][1][uic.SCORE_ROW]}")
+            alert_user(
+                f"Game Over!\nYou: {state['points_table'][0][uic.SCORE_ROW]}\nAI: {state['points_table'][1][uic.SCORE_ROW]}")
             self.Close()
             return
+
         dice = [1, 2, 3, 4, 5]
         keep_dice = []
         self.update_dice_container(self.dice_container, dice)
         self.update_dice_container(self.keep_dice_container, keep_dice, keep=True)
         dice_rolls = -1
+
         if state['round_no'] % 2 == 0:
             self.game_info.Label = "It's your turn"
-            self.vbox2.Layout()
         else:
             self.game_info.Label = "It's AI's turn"
-            self.vbox2.Layout()
             self.ai_move()
+        self.vbox2.Layout()
 
     def ai_move(self):
         global dice, keep_dice
@@ -140,11 +143,11 @@ class MyFrame(wx.Frame):
         # Delay the score update until after all rolls are complete
         choice = np.random.choice([index for index in uic.SCORE_ROWS if state['points_table'][1][index] == -1])
         wx.CallLater(uic.AI_SLEEP_TIME * (roll_counts + 1), lambda:
-                     game.update_score(state, self, choice, 1, dice, keep_dice))
+        game.update_score(state, self, choice, 1, dice, keep_dice))
 
     def roll_dice_for_ai(self):
         global dice, keep_dice
-        
+
         dice = dice_utils.dice_roll(len(dice))
         dice, new = dice_utils.choose_dice(dice)
         keep_dice += new
@@ -169,7 +172,7 @@ class MyFrame(wx.Frame):
         update_score(state, self, row, 0, dice, keep_dice)
         event.Skip()
 
-    def update_dice(self,die,is_keep):
+    def update_dice(self, die, is_keep):
         global dice
         global keep_dice
         if is_keep:
@@ -189,7 +192,7 @@ class MyFrame(wx.Frame):
         if dice_rolls == -1:
             alert_user("Please roll the dice first")
         else:
-            self.update_dice(die,is_keep)
+            self.update_dice(die, is_keep)
 
     def on_roll_button(self, event):
         global dice, dice_rolls
@@ -210,10 +213,11 @@ class MyFrame(wx.Frame):
 
     def on_key_press(self, event):
         match event.KeyCode:
-            case 82: # R key
+            case 82:  # R key
                 self.on_roll_button(event)
             case _:
                 event.Skip()
+
 
 class MyApp(wx.App):
     def __init__(self, redirect=False, filename=None, useBestVisual=False, clearSigInt=True):
