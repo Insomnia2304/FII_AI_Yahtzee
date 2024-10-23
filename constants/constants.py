@@ -29,6 +29,7 @@ initial_state = {
 
 SUM_ROW = 6
 BONUS_ROW = 7
+YAHTZEE_ROW = 13
 SCORE_ROW = 15
 
 AI_SLEEP_TIME = 1250  # ms

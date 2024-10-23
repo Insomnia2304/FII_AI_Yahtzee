@@ -17,19 +17,19 @@ def is_final_state(state) -> bool:
 
 def update_score(state, game, row, player, dice, keep_dice):
     total_dice = dice + keep_dice
-    is_yahtzee = len(set(total_dice)) == 1  # checking whether all dice are the same
 
-    print(f"Player {player} chose {points_table_labels[row]}")
-    print(state['points_table'][player][SCORE_ROW])
+    # multiple YAHTZEEs
+    joker = upper_side_completed = False
+    if len(set(total_dice)) == 1 and state['points_table'][player][YAHTZEE_ROW] != -1:
+        joker = True
+        if state['points_table'][player][YAHTZEE_ROW] != 0:
+            state['points_table'][player][YAHTZEE_ROW] += 100
+            state['points_table'][player][SCORE_ROW] += 100
+            game.grid.SetCellValue(YAHTZEE_ROW, player, str(state['points_table'][player][YAHTZEE_ROW]))
+        if state['points_table'][player][total_dice[0]-1] != -1:
+            upper_side_completed = True
 
-    # Yahtzee bonus
-    if state['points_table'][player][SCORE_ROW] != 0 and is_yahtzee:
-        print(state['points_table'][player][SCORE_ROW])
-        print("Yahtzee bonus!")
-        state['points_table'][player][SCORE_ROW] += 100
-        game.grid.SetCellValue(SCORE_ROW, player, str(state['points_table'][player][SCORE_ROW]))
-
-    score = dice_utils.validate_choice(total_dice, row)
+    score = dice_utils.validate_choice(total_dice, row, joker=joker, upper_side_completed=upper_side_completed)
     state['points_table'][player][row] = score
 
     if 0 <= row <= 5:
@@ -50,16 +50,17 @@ def update_score(state, game, row, player, dice, keep_dice):
 
 def display_potential_scores(state, game, dice, keep_dice):
     total_dice = dice + keep_dice
-    is_yahtzee = len(set(total_dice)) == 1
+
+    joker = upper_side_completed = False
+    if len(set(dice)) == 1 and state['points_table'][0][YAHTZEE_ROW] != -1:
+        joker = True
+        if state['points_table'][0][dice[0]-1] != -1:
+            upper_side_completed = True
 
     for row in SCORE_ROWS:
         if state['points_table'][0][row] == -1:
-            game.grid.SetCellValue(row, 0, str(dice_utils.validate_choice(total_dice, row)))
+            game.grid.SetCellValue(row, 0, str(dice_utils.validate_choice(total_dice, row, joker=joker, upper_side_completed=upper_side_completed)))
             game.grid.SetCellTextColour(row, 0, wx.RED)
-
-    if is_yahtzee and state['points_table'][0][13] != -1:
-        game.grid.SetCellValue(SCORE_ROW, 0, "+100 Bonus")
-        game.grid.SetCellTextColour(SCORE_ROW, 0, wx.BLUE)
 
 
 def undisplay_potential_scores(state, game):

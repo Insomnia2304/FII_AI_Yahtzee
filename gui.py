@@ -143,7 +143,7 @@ class MyFrame(wx.Frame):
         # Delay the score update until after all rolls are complete
         choice = np.random.choice([index for index in uic.SCORE_ROWS if state['points_table'][1][index] == -1])
         wx.CallLater(uic.AI_SLEEP_TIME * (roll_counts + 1), lambda:
-        game.update_score(state, self, choice, 1, dice, keep_dice))  # something weird here--
+        game.update_score(state, self, choice, 1, dice, keep_dice))
 
     def roll_dice_for_ai(self):
         global dice, keep_dice
