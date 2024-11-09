@@ -5,6 +5,7 @@ import wx.grid
 import constants.constants as uic
 import game
 from game import update_score
+from game_history import GameHistoryFrame
 from utils import dice_utils
 from utils.gui_utils import alert_user
 
@@ -12,19 +13,28 @@ dice, keep_dice, state, dice_rolls = game.set_initial_state()
 
 
 class MyFrame(wx.Frame):
+    def reset_table(self):
+        for i in range(len(uic.SCORE_ROWS)):
+            for j in range(2):
+                if state['points_table'][j][i] == -1:
+                    self.grid.SetCellValue(i, j, '')
+                self.grid.SetCellValue(uic.SUM_ROW, j, str(state['points_table'][j][uic.SUM_ROW]))
+                self.grid.SetCellValue(uic.BONUS_ROW, j, str(state['points_table'][j][uic.BONUS_ROW]))
+                self.grid.SetCellValue(uic.SCORE_ROW, j, str(state['points_table'][j][uic.SCORE_ROW]))
     def make_table(self):
-        self.grid.CreateGrid(len(uic.points_table_labels), 2)
+        self.grid.CreateGrid(len(uic.POINTS_TABLE_LABELS), 2)
         self.grid.SetDefaultCellAlignment(horiz=wx.ALIGN_CENTRE, vert=wx.ALIGN_CENTRE)
         self.grid.RowLabelSize = 150
 
         self.grid.SetColLabelValue(0, "You")
         self.grid.SetColLabelValue(1, "AI")
-        [self.grid.SetRowLabelValue(i, uic.points_table_labels[i]) for i in range(len(uic.points_table_labels))]
+        [self.grid.SetRowLabelValue(i, uic.POINTS_TABLE_LABELS[i]) for i in range(len(uic.POINTS_TABLE_LABELS))]
+        self.reset_table()
 
         self.grid.EnableDragColSize(False)
         self.grid.EnableDragRowSize(False)
 
-        for row in range(len(uic.points_table_labels)):
+        for row in range(len(uic.POINTS_TABLE_LABELS)):
             for col in range(2):
                 self.grid.SetReadOnly(row, col, True)
 
@@ -40,6 +50,8 @@ class MyFrame(wx.Frame):
         self.grid.Bind(wx.grid.EVT_GRID_SELECT_CELL, self.on_cell_select)
         self.grid.Bind(wx.EVT_KEY_DOWN, self.on_key_press)
 
+
+
     def __init__(self, *args, **kw):
         super(MyFrame, self).__init__(*args, **kw)
 
@@ -47,6 +59,15 @@ class MyFrame(wx.Frame):
         self.hbox = wx.BoxSizer(wx.HORIZONTAL)
 
         vbox1 = wx.BoxSizer(wx.VERTICAL)
+
+        menu = wx.MenuBar()
+        game_menu = wx.Menu()
+        new_game = game_menu.Append(wx.ID_ANY, "New Game", "Start a new game")
+        self.Bind(wx.EVT_MENU, self.on_new_game, new_game)
+        game_history = game_menu.Append(wx.ID_ANY, "Game History", "View game history")
+        self.Bind(wx.EVT_MENU, self.on_game_history, game_history)
+        menu.Append(game_menu, "Game")
+        self.SetMenuBar(menu)
 
         self.grid = wx.grid.Grid(self.panel)
         self.make_table()
@@ -117,9 +138,8 @@ class MyFrame(wx.Frame):
         if game.is_final_state(state):
             alert_user(
                 f"Game Over!\nYou: {state['points_table'][0][uic.SCORE_ROW]}\nAI: {state['points_table'][1][uic.SCORE_ROW]}")
-            self.Close()
+            self.reset_game()
             return
-
         dice = [1, 2, 3, 4, 5]
         keep_dice = []
         self.update_dice_container(self.dice_container, dice)
@@ -170,6 +190,27 @@ class MyFrame(wx.Frame):
             return
         game.undisplay_potential_scores(state, self)
         update_score(state, self, row, 0, dice, keep_dice)
+        event.Skip()
+
+    def reset_game(self):
+        global dice, keep_dice, state, dice_rolls
+        print('Resetting game')
+        dice, keep_dice, state, dice_rolls = game.set_initial_state()
+        print(state['points_table'])
+        self.update_dice_container(self.dice_container, dice)
+        self.update_dice_container(self.keep_dice_container, keep_dice, keep=True)
+        self.game_info.Label = "It's your turn"
+        game.undisplay_potential_scores(state, self)
+        self.reset_table()
+        self.vbox2.Layout()
+
+    def on_new_game(self, event):
+        self.reset_game()
+        event.Skip()
+
+    def on_game_history(self, event):
+        history_frame = GameHistoryFrame()
+        history_frame.Show()
         event.Skip()
 
     def update_dice(self, die, is_keep):

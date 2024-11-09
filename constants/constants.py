@@ -1,4 +1,4 @@
-points_table_labels = [
+POINTS_TABLE_LABELS = [
     "Ones",
     "Twos",
     "Threes",

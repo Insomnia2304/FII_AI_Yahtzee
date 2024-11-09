@@ -1,10 +1,11 @@
 from constants.constants import *
 from utils import dice_utils, gui_utils
 import wx
+import copy
 
 
 def set_initial_state():
-    state = initial_state.copy()
+    state = copy.deepcopy(initial_state)
     dice = [1, 2, 3, 4, 5]
     keep_dice = []
     dice_rolls = -1
