@@ -5,6 +5,17 @@ python --version [3.12.7]
 -[DONE] Calcul de suma partiala
 -[FIXED] AI pare sa nu aleaga niciodata si ultimul zar
 -[DONE] YAHTZEE-uri multiple
--Gasirea unei modalitati de a opri loop-ul de aruncare multipla a zarurilor din AI in cazul in care a ales deja toate zarurile
+-[WONT'FIX] Gasirea unei modalitati de a opri loop-ul de aruncare multipla a zarurilor din AI in cazul in care a ales deja toate zarurile
 -[DONE] Afisarea de scoruri potentiale (cu rosu) pentru fiecare casuta
-- Adaugarea unui rand nou pentru Yahzee-uri multiple (bonusul)
+-[DONE] Adaugarea unui rand nou pentru Yahzee-uri multiple (bonusul)
+
+Q-learning
+    - Definirea starilor/actiunilor
+    - Definirea recompenselor pentru agent
+    - Implementarea unui episod de invatare (o runda de joc; 13 tururi de scorat - fiecare tur cu 1-3 aruncari)
+        - pentru lab am putea avea episodul de invatare sa fie random, algoritmul pt dupa partial
+    - Implementarea algoritmului propriu zis
+    - Antrenarea agentului timp de 100 episoade
+    - * un grafic de convergenta
+    - modificarea AI-ului sa foloseasca Q-learning
+
