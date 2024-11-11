@@ -14,13 +14,14 @@ dice, keep_dice, state, dice_rolls = game.set_initial_state()
 
 class MyFrame(wx.Frame):
     def reset_table(self):
-        for i in range(len(uic.SCORE_ROWS)):
+        for i in uic.SCORE_ROWS:
             for j in range(2):
                 if state['points_table'][j][i] == -1:
                     self.grid.SetCellValue(i, j, '')
-                self.grid.SetCellValue(uic.SUM_ROW, j, str(state['points_table'][j][uic.SUM_ROW]))
-                self.grid.SetCellValue(uic.BONUS_ROW, j, str(state['points_table'][j][uic.BONUS_ROW]))
-                self.grid.SetCellValue(uic.SCORE_ROW, j, str(state['points_table'][j][uic.SCORE_ROW]))
+        for j in range(2):
+            self.grid.SetCellValue(uic.SUM_ROW, j, str(state['points_table'][j][uic.SUM_ROW]))
+            self.grid.SetCellValue(uic.BONUS_ROW, j, str(state['points_table'][j][uic.BONUS_ROW]))
+            self.grid.SetCellValue(uic.SCORE_ROW, j, str(state['points_table'][j][uic.SCORE_ROW]))
     def make_table(self):
         self.grid.CreateGrid(len(uic.POINTS_TABLE_LABELS), 2)
         self.grid.SetDefaultCellAlignment(horiz=wx.ALIGN_CENTRE, vert=wx.ALIGN_CENTRE)
