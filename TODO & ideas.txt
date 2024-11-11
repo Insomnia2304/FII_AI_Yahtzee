@@ -19,3 +19,7 @@ Q-learning
     - * un grafic de convergenta
     - modificarea AI-ului sa foloseasca Q-learning
 
+TO-DO
+- Sebi: init Q table
+- Sorin: choose Q values
+- Ionut: update Q values

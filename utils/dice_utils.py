@@ -10,6 +10,10 @@ def choose_dice(dice: list[int]) -> tuple[list[int], list[int]]:
     indexes = np.random.choice(range(len(dice)), np.random.randint(len(dice) + 1), replace=False)
     return [x for x in dice if dice.index(x) not in indexes], [x for x in dice if dice.index(x) in indexes]
 
+def choose_dice_q(indexes: list[int], dice: list[int]) -> tuple[list[int], list[int]]:
+    keep_dice = [dice[i] for i, value in enumerate(indexes) if value == 1]
+    roll_dice = [dice[i] for i, value in enumerate(indexes) if value == 0]
+    return roll_dice, keep_dice
 
 def validate_choice(dice: list[int], choice: int, joker=False, upper_side_completed=True) -> int:
     if 0 <= choice <= 5:

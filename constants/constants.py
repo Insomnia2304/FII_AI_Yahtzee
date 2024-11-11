@@ -17,7 +17,7 @@ POINTS_TABLE_LABELS = [
     "SCORE"
 ]
 
-SCORE_ROWS = [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14]
+SCORE_ROWS = [0, 1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14]
 
 initial_state = {
     'round_no': 0,
