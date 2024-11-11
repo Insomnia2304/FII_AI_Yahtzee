@@ -44,9 +44,9 @@ def choose_action(sorted_dice, remaining_rolls) -> tuple[int,...] | int:
     global state
     # TODO: pentru a = sorted_dice
     # daca remaining_rolls == 0
-    #     alege random din SCORE_ROWS o actiune unde nu a completat
+    #     alege actiune din SCORE_ROWS cu valoare maxima pentru zarurile curente, daca nu a completat
     # altfel
-    #     alege de peste tot (la scor daca nu a completat)
+    #     alege de peste tot, la SOCRE_ROWS fiind aceleasi consideratii de mai sus
     if remaining_rolls == 0:
         return np.random.choice(SCORE_ROWS)
     else:
