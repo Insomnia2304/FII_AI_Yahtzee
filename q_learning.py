@@ -10,36 +10,21 @@ current_turn = 0
 dice, keep_dice, state, dice_rolls = set_initial_state()
 
 def init_q_table() -> dict:
-    Q = {
-        # zaruri masluite >:)
-        (1,2,3,4,5): {
-            (0,0,0,0,1): 0,
-            (0,0,0,1,0): 0,
-            # ...
-        },
-        #...
-        # din SCORE_ROWS
-        0: {
-            (0, 0, 0, 0, 1): 0,
-            (0, 0, 0, 1, 0): 0,
-            # ...
-        },
-        1: {
-            (0, 0, 0, 0, 1): 0,
-            (0, 0, 0, 1, 0): 0,
-            # ...
-        },
-        #...
-        14: {
-            (0, 0, 0, 0, 1): 0,
-            (0, 0, 0, 1, 0): 0,
-            # ...
-        }
-    }
-    # return Q
-    # TODO: ce-i mai sus ^
-    pass
+    dice_combinations = [(a, b, c, d, e) for a in range(1, 7) for b in range(a, 7) for c in range(b, 7) for d in range(c, 7) for e in range(d, 7)]
+    choices = [(a, b, c, d, e) for a in range(2) for b in range(2) for c in range(2) for d in range(2) for e in range(2)][1:] # exclude 0,0,0,0,0 since it basically means rolling all dice
 
+    Q = {}
+    for comb in dice_combinations:
+        Q[comb] = {}
+
+        for choice in choices:
+            Q[comb][choice] = 0
+
+        for row in SCORE_ROWS:
+            Q[comb][row] = 0
+    
+    return Q
+    
 def choose_action(sorted_dice, remaining_rolls) -> tuple[int,...] | int:
     global state
     # TODO: pentru a = sorted_dice
