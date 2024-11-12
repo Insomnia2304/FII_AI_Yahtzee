@@ -1,5 +1,8 @@
+import math
+
 from constants.constants import *
 from utils import dice_utils
+import numpy as np
 
 
 def update_score(state, row, player, dice, keep_dice):
@@ -25,3 +28,23 @@ def update_score(state, row, player, dice, keep_dice):
             state['points_table'][player][SCORE_ROW] += 35
 
     state['points_table'][player][SCORE_ROW] += score
+
+    return score
+
+def get_reward(dice: tuple[int,...], score=-1) -> float:
+    if score is not -1:
+        return score
+
+    if score == 0:
+        return -5
+
+    potential_scores = []
+    for row in SCORE_ROWS:
+        potential_scores.append(dice_utils.validate_choice(list(dice), row))
+
+    reward = np.mean(potential_scores)
+    if math.isnan(reward):
+        print(potential_scores)
+        print("NAN")
+
+    return reward

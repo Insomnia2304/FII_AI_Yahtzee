@@ -1,11 +1,17 @@
+import numpy as np
+
 from constants.constants import *
 from game import set_initial_state
 import utils.dice_utils as dice_utils
 import utils.q_utils as q_utils
-import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 TURNS = 13
+ALPHA = 0.5 # learning rate
+DECAY_RATE = 0.98
+DISCOUNT = 0.9 # discount factor
+
 
 current_turn = 0
 dice, keep_dice, state, dice_rolls = set_initial_state()
@@ -19,10 +25,10 @@ def init_q_table() -> dict:
         Q[comb] = {}
 
         for choice in choices:
-            Q[comb][choice] = 0
+            Q[comb][choice] = 0.01
 
         for row in SCORE_ROWS:
-            Q[comb][row] = 0
+            Q[comb][row] = 0.01
     
     return Q
     
@@ -46,10 +52,13 @@ def choose_action(sorted_dice, remaining_rolls, Q: dict) -> tuple[int,...] | int
                 return tuple(int(bit) for bit in f"{choice:05b}")
 
 
-def update_q_value(sorted_dice, action):
-    # TODO: update Q value
-    # momentan rewards random/arbitrare
+def update_q_value(old_state: tuple[int,...], new_state: tuple[int,...], action: tuple[int,...] | int, score = -1):
+    global Q, DISCOUNT, ALPHA
+    reward = q_utils.get_reward(new_state, score)
+    Q[old_state][action] += ALPHA * (reward + DISCOUNT * max(Q[new_state].values()) - Q[old_state][action])
     pass
+
+Q = init_q_table()
 
 def episode():
     global current_turn, dice, keep_dice, state, dice_rolls
@@ -57,26 +66,36 @@ def episode():
         remaining_rolls = 2
         dice = dice_utils.dice_roll(len(dice))
         sorted_dice = sorted(dice + keep_dice)
-        action = choose_action(sorted_dice, remaining_rolls)
+        action = choose_action(tuple(sorted_dice), remaining_rolls, Q)
         while isinstance(action, tuple) and remaining_rolls > 0:
             #print("Rolling dice",action)
             sorted_dice = sorted(dice + keep_dice)
             dice, keep_dice = dice_utils.choose_dice_q(list(action), sorted_dice)
-            update_q_value(sorted_dice, action)
-            sorted_dice = sorted(dice + keep_dice)
+            new_sorted_dice = sorted(dice + keep_dice)
+            update_q_value(tuple(sorted_dice), tuple(new_sorted_dice), action)
             remaining_rolls -= 1
-            action = choose_action(sorted_dice, remaining_rolls)
+            action = choose_action(tuple(new_sorted_dice), remaining_rolls, Q)
         else:
             #print("Updating score")
-            q_utils.update_score(state, action, 0, dice, keep_dice)
+            score = q_utils.update_score(state, action, 0, dice, keep_dice)
             sorted_dice = sorted(dice + keep_dice)
-            update_q_value(sorted_dice, action)
+            update_q_value(tuple(sorted_dice), tuple(sorted_dice), action, score)
         current_turn += 1
 
 scores = []
 
-# for i in range(10_000):
-#     episode()
-#     scores.append(state['points_table'][0][SCORE_ROW])
-#     current_turn = 0
-#     dice, keep_dice, state, dice_rolls = set_initial_state()
+for i in range(10_000):
+    episode()
+    print(f"Episode {i} completed")
+    scores.append(state['points_table'][0][SCORE_ROW])
+    current_turn = 0
+    dice, keep_dice, state, dice_rolls = set_initial_state()
+
+for state in Q:
+    print(max(Q[state].values()))
+
+# plt.plot(scores)
+# window_size = 100
+# rolling_mean = np.convolve(scores, np.ones(window_size)/window_size, mode='valid')
+# plt.plot(range(len(rolling_mean)), rolling_mean)
+# plt.show()
