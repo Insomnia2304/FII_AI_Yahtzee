@@ -3,6 +3,7 @@ from game import set_initial_state
 import utils.dice_utils as dice_utils
 import utils.q_utils as q_utils
 import numpy as np
+import random
 
 TURNS = 13
 
@@ -25,19 +26,25 @@ def init_q_table() -> dict:
     
     return Q
     
-def choose_action(sorted_dice, remaining_rolls) -> tuple[int,...] | int:
+def choose_action(sorted_dice, remaining_rolls, Q: dict) -> tuple[int,...] | int:
     global state
-    # TODO: pentru a = sorted_dice
-    # daca remaining_rolls == 0
-    #     alege actiune din SCORE_ROWS cu valoare maxima pentru zarurile curente, daca nu a completat
-    # altfel
-    #     alege de peste tot, la SOCRE_ROWS fiind aceleasi consideratii de mai sus
+
     if remaining_rolls == 0:
-        return np.random.choice(SCORE_ROWS)
+        available_actions = [row for row in SCORE_ROWS if state['points_table'][0][row] == -1]
+        best_action = max(available_actions, key=lambda action: Q[sorted_dice][action])
+        return best_action
     else:
-        choice = np.random.randint(1, 32)
-        # TODO: convert to tuple
-        return tuple(int(bit) for bit in f"{choice:05b}")
+        if random.random() < 0.4:
+            choice = random.randint(1, 31)
+            return tuple(int(x) for x in f"{choice:05b}")
+        else:
+            best_choice = max(Q[sorted_dice], key=Q[sorted_dice].get)
+            if isinstance(best_choice, int):
+                return best_choice
+            else:
+                choice = random.randint(1, 31)
+                return tuple(int(bit) for bit in f"{choice:05b}")
+
 
 def update_q_value(sorted_dice, action):
     # TODO: update Q value
