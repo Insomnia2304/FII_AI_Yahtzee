@@ -32,7 +32,7 @@ def update_score(state, row, player, dice, keep_dice):
     return score
 
 def get_reward(dice: tuple[int,...], score=-1) -> float:
-    if score is not -1:
+    if score != -1:
         return score
 
     if score == 0:
