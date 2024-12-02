@@ -8,6 +8,7 @@ from game_history import GameHistoryFrame
 from utils import dice_utils
 from utils.gui_utils import alert_user
 import pickle
+from q_learning import choose_action
 
 dice, keep_dice, state, dice_rolls = game.set_initial_state()
 
@@ -159,31 +160,40 @@ class MyFrame(wx.Frame):
         self.vbox2.Layout()
 
     def ai_move(self):
-        global dice, keep_dice
+        global dice, keep_dice, dice_rolls
 
-        roll_counts = np.random.randint(1, 4)
-        for i in range(roll_counts):
-            if uic.AI_SLEEP_TIME == 0:
-                self.roll_dice_for_ai()
-            else:
-                wx.CallLater(uic.AI_SLEEP_TIME * (i + 1), self.roll_dice_for_ai)
+        if uic.AI_SLEEP_TIME == 0:
+            self.roll_dice_for_ai()
+        else:
+            wx.CallLater(uic.AI_SLEEP_TIME, self.roll_dice_for_ai)
 
-        # Delay the score update until after all rolls are complete
-        choice = np.random.choice([index for index in uic.SCORE_ROWS if state['points_table'][1][index] == -1])
-        print(dice, keep_dice)
-        wx.CallLater(uic.AI_SLEEP_TIME * (roll_counts + 1), lambda:
-        game.update_score(state, self, choice, 1, dice, keep_dice))
 
     def roll_dice_for_ai(self):
-        global dice, keep_dice
+        global dice, keep_dice, dice_rolls, state, Q
+        dice_rolls += 1
 
         dice = dice_utils.dice_roll(len(dice))
-        dice, new = dice_utils.choose_dice(dice)
-        keep_dice += new
-        print(dice, keep_dice)
+
+        sorted_dice = sorted(dice + keep_dice)
+        action = choose_action(tuple(sorted_dice), 2 - dice_rolls, Q, state)
+        print(action)
+        if isinstance(action, tuple):
+            dice, keep_dice = dice_utils.choose_dice_q(list(action), sorted_dice)
+            wx.CallLater(uic.AI_SLEEP_TIME, self.roll_dice_for_ai_2)
+        else:
+            wx.CallLater(uic.AI_SLEEP_TIME, update_score,state, self, action, 1, dice, keep_dice)
 
         self.update_dice_container(self.dice_container, dice)
         self.update_dice_container(self.keep_dice_container, keep_dice, keep=True)
+
+    # pentru a putea arata cand AI-ul pastrează zaruri
+    def roll_dice_for_ai_2(self):
+        global dice, keep_dice, dice_rolls
+
+        self.update_dice_container(self.dice_container, dice)
+        self.update_dice_container(self.keep_dice_container, keep_dice, keep=True)
+
+        wx.CallLater(uic.AI_SLEEP_TIME, self.roll_dice_for_ai)
 
     def on_cell_select(self, event):
         row, col = event.GetRow(), event.GetCol()
