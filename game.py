@@ -1,7 +1,10 @@
+import numpy as np
+
 from constants.constants import *
 from utils import dice_utils, gui_utils
 import wx
 import copy
+
 
 
 def set_initial_state():

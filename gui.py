@@ -1,5 +1,4 @@
 import numpy as np
-
 import wx
 import wx.grid
 import constants.constants as uic
@@ -8,9 +7,14 @@ from game import update_score
 from game_history import GameHistoryFrame
 from utils import dice_utils
 from utils.gui_utils import alert_user
+import pickle
 
 dice, keep_dice, state, dice_rolls = game.set_initial_state()
 
+with open('q_table.pkl', 'rb') as f:
+    Q = pickle.load(f)
+
+print(Q.keys())
 
 class MyFrame(wx.Frame):
     def reset_table(self):

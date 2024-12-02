@@ -10,16 +10,11 @@ python --version [3.12.7]
 -[DONE] Adaugarea unui rand nou pentru Yahzee-uri multiple (bonusul)
 
 Q-learning
-    - Definirea starilor/actiunilor
-    - Definirea recompenselor pentru agent
-    - Implementarea unui episod de invatare (o runda de joc; 13 tururi de scorat - fiecare tur cu 1-3 aruncari)
-        - pentru lab am putea avea episodul de invatare sa fie random, algoritmul pt dupa partial
-    - Implementarea algoritmului propriu zis
-    - Antrenarea agentului timp de 100 episoade
     - * un grafic de convergenta
     - modificarea AI-ului sa foloseasca Q-learning
 
 TO-DO
-- Sebi: init Q table
-- Sorin: choose Q values
-- Ionut: update Q values
+- update reward function - reward=media scor nou-media scor vechi (ia in calcul doar scorurile necompletate) - sorin
+- AI tip of the day (arata cele mai bune 3 actiuni intr-un loc din joc) - sebi
+- integrare (duh) - ionut
+

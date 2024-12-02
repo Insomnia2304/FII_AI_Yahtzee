@@ -1,18 +1,18 @@
 import numpy as np
-
 from constants.constants import *
 from game import set_initial_state
 import utils.dice_utils as dice_utils
 import utils.q_utils as q_utils
 import random
 import matplotlib.pyplot as plt
+import pickle
 
 TURNS = 13
 ALPHA = 0.5 # learning rate
 DECAY_RATE = 0.98
 DISCOUNT = 0.9 # discount factor
-EXPLORATION_CHANCE = 0.99
-EXPLORATION_CHANCE_DECAY = 0.999
+EXPLORATION_CHANCE = 0.999
+EXPLORATION_CHANCE_DECAY = 0.9999
 
 
 
@@ -72,7 +72,9 @@ def update_q_value(old_state: tuple[int,...], new_state: tuple[int,...], action:
     Q[old_state][action] += ALPHA * (reward + DISCOUNT * max(Q[new_state].values()) - Q[old_state][action])
     pass
 
+
 Q = init_q_table()
+
 
 def episode():
     global current_turn, dice, keep_dice, state, dice_rolls
@@ -98,7 +100,7 @@ def episode():
 
 scores = []
 
-for i in range(10_000):
+for i in range(20_000):
     episode()
     decay_exploration_rate()
     print(f"Episode {i} completed")
@@ -111,3 +113,7 @@ window_size = 500
 rolling_mean = np.convolve(scores, np.ones(window_size)/window_size, mode='valid')
 plt.plot(range(len(rolling_mean)), rolling_mean)
 plt.show()
+
+
+with open('q_table.pkl', 'wb') as file:
+    pickle.dump(Q,file)
