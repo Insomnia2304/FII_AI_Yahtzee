@@ -1,3 +1,4 @@
+import random
 import numpy as np
 import wx
 import wx.grid
@@ -99,6 +100,10 @@ class MyFrame(wx.Frame):
             wx.Font(14, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, faceName='Arial')
         )
 
+        lighted_box_image = wx.Image("./img/hint.png", wx.BITMAP_TYPE_ANY).Scale(35, 35)
+        self.tip_button = wx.BitmapButton(self.panel, bitmap=wx.Bitmap(lighted_box_image), pos=(20, 20))
+        self.tip_button.Bind(wx.EVT_BUTTON, self.on_tip_button)
+
         self.vbox2.AddMany([
             (self.label1, 0, wx.CENTER, 5),
             (self.dice_container, 0, wx.CENTER, 5),
@@ -118,6 +123,28 @@ class MyFrame(wx.Frame):
         self.SetMaxSize((1024, 768))
         self.SetTitle('Yahtzee')
         self.Centre()
+
+    def on_tip_button(self, event):
+        tips = [
+            "Tip 1: Try to get a Yahtzee early!",
+            "Tip 2: Save your high rolls for the upper section.",
+            "Tip 3: Aim for the full house if you have two pairs.",
+            "Tip 4: Don't forget about the small and large straights.",
+            "Tip 5: Use your rerolls wisely."
+        ]
+        tip = random.choice(tips)
+        self.show_tip(tip)
+        event.Skip()
+
+    def show_tip(self, tip):
+        tip_panel = wx.Panel(self.panel, pos=(80, 20), size=(900, 100))
+        tip_panel.SetBackgroundColour(wx.Colour(255, 255, 255))
+        tip_text = wx.StaticText(tip_panel, label=tip, pos=(10, 10))
+        tip_text.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+        tip_text.SetForegroundColour(wx.Colour(0, 0, 0))
+
+        tip_panel.Show()
+        self.panel.Layout()
 
     def update_dice_container(self, container: wx.BoxSizer, dice: list[int], keep=False):
         self.panel.Freeze()
