@@ -29,6 +29,8 @@ def decay_exploration_rate():
 def int_to_tuple(choice: int) -> tuple[int, ...]:
     return tuple(int(x) for x in f"{choice:05b}")
 
+def tuple_to_int(choice: tuple[int, ...]) -> int:
+    return int("".join(str(x) for x in choice), 2)
 
 def init_q_table() -> dict:
     dice_combinations = [(a, b, c, d, e) for a in range(1, 7) for b in range(a, 7) for c in range(b, 7) for d in range(c, 7) for e in range(d, 7)]
@@ -101,20 +103,46 @@ def episode():
 
 scores = []
 
+track_convergence_for = (1,2,3,4,5)
+tracked_state = []
 if __name__ == "__main__":
-    for i in range(20_000):
+    for i in range(10_000):
         episode()
+        tracked_state.append([v for k, v in Q[track_convergence_for].items()])
         decay_exploration_rate()
         if EXPLORATION_CHANCE == 0:
             break
         print(f"Episode {i} completed")
         scores.append(state['points_table'][1][SCORE_ROW])
 
-    plt.plot(scores)
-    window_size = 500
-    rolling_mean = np.convolve(scores, np.ones(window_size) / window_size, mode='valid')
-    plt.plot(range(len(rolling_mean)), rolling_mean)
+
+    # get index of top 3 actions
+    top_3_actions = sorted(Q[track_convergence_for].items(), key=lambda x: x[1], reverse=True)[:3]
+    top_3_actions = [k for k, v in top_3_actions]
+    indexes = []
+    for action in top_3_actions:
+        if isinstance(action, int):
+            if action >= 5:
+                indexes.append(action+28)
+            else:
+                indexes.append(action+30)
+        else:
+            indexes.append(tuple_to_int(action)-1)
+
+
+    plt.figure(figsize=(10, 5))
+    for i in range(len(tracked_state[0])):
+        plt.plot([v[i] for v in tracked_state if i in indexes])
+    for action in top_3_actions:
+        print(f'Action {action}')
     plt.show()
+
+    # plt.figure(figsize=(10, 5))
+    # plt.plot(scores)
+    # window_size = 500
+    # rolling_mean = np.convolve(scores, np.ones(window_size) / window_size, mode='valid')
+    # plt.plot(range(len(rolling_mean)), rolling_mean)
+    # plt.show()
 
     with open('q_table.pkl', 'wb') as file:
         pickle.dump(Q, file)
