@@ -1,3 +1,5 @@
+import copy
+
 import numpy as np
 from constants.constants import *
 from game import set_initial_state
@@ -12,7 +14,7 @@ ALPHA = 0.05
 DECAY_RATE = 0.95
 DISCOUNT = 0.9
 EXPLORATION_CHANCE = 0.9
-EXPLORATION_CHANCE_DECAY = 0.9999
+EXPLORATION_CHANCE_DECAY = 0.999
 MIN_EXPLORATION_CHANCE = 0.05
 
 current_turn = 0
@@ -88,9 +90,10 @@ def episode():
             remaining_rolls -= 1
             action = choose_action(tuple(new_sorted_dice), remaining_rolls, Q, state, EXPLORATION_CHANCE)
         else:
+            old_state = copy.deepcopy(state)
             score = q_utils.update_score(state, action, 1, dice, keep_dice)
             sorted_dice = sorted(dice + keep_dice)
-            reward = q_utils.get_reward(state, tuple(sorted_dice), action, state['points_table'][1], state['points_table'][1], remaining_rolls, score)
+            reward = q_utils.get_reward(state, tuple(sorted_dice), action, old_state['points_table'][1], state['points_table'][1], remaining_rolls, score)
             update_q_value(tuple(sorted_dice), tuple(sorted_dice), action, reward)
 
         current_turn += 1

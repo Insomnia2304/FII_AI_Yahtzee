@@ -1,10 +1,8 @@
-import math
-
 from constants.constants import *
-from q_learning import TURNS
 from utils import dice_utils
 import numpy as np
 
+TURNS = 13
 
 def update_score(state, row, player, dice, keep_dice):
     total_dice = dice + keep_dice
