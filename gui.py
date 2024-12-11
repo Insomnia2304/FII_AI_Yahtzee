@@ -141,7 +141,6 @@ class MyFrame(wx.Frame):
         tip_text = wx.StaticText(tip_panel, label=tip, pos=(10, 10))
         tip_text.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         tip_text.SetForegroundColour(wx.Colour(0, 0, 0))
-
         tip_panel.Show()
         self.panel.Layout()
 

@@ -10,12 +10,12 @@ import matplotlib.pyplot as plt
 import pickle
 
 TURNS = 13
-ALPHA = 0.05
+ALPHA = 0.2
 DECAY_RATE = 0.95
 DISCOUNT = 0.9
-EXPLORATION_CHANCE = 0.9
-EXPLORATION_CHANCE_DECAY = 0.999
-MIN_EXPLORATION_CHANCE = 0.05
+EXPLORATION_CHANCE = 0.99
+EXPLORATION_CHANCE_DECAY = 0.9999
+MIN_EXPLORATION_CHANCE = 0.025
 
 current_turn = 0
 dice, keep_dice, state, dice_rolls = set_initial_state()
@@ -86,8 +86,9 @@ def episode():
         while isinstance(action, tuple) and remaining_rolls > 0:
             sorted_dice = sorted(dice + keep_dice)
             dice, keep_dice = dice_utils.choose_dice_q(list(action), sorted_dice)
+            dice = dice_utils.dice_roll(len(dice))
             new_sorted_dice = sorted(dice + keep_dice)
-            reward = q_utils.get_reward(state, tuple(new_sorted_dice), -1, state['points_table'][1], state['points_table'][1], remaining_rolls)
+            reward = q_utils.get_reward(state, tuple(new_sorted_dice), action, state['points_table'][1], state['points_table'][1], remaining_rolls,tuple(new_sorted_dice))
             update_q_value(tuple(sorted_dice), tuple(new_sorted_dice), action, reward)
             remaining_rolls -= 1
             action = choose_action(tuple(new_sorted_dice), remaining_rolls, Q, state, EXPLORATION_CHANCE)
@@ -95,7 +96,7 @@ def episode():
             old_state = copy.deepcopy(state)
             score = q_utils.update_score(state, action, 1, dice, keep_dice)
             sorted_dice = sorted(dice + keep_dice)
-            reward = q_utils.get_reward(state, tuple(sorted_dice), action, old_state['points_table'][1], state['points_table'][1], remaining_rolls, score)
+            reward = q_utils.get_reward(state, tuple(sorted_dice), action, old_state['points_table'][1], state['points_table'][1], remaining_rolls,tuple(sorted_dice),score)
             update_q_value(tuple(sorted_dice), tuple(sorted_dice), action, reward)
 
         current_turn += 1
@@ -106,7 +107,7 @@ scores = []
 track_convergence_for = (1,2,3,4,5)
 tracked_state = []
 if __name__ == "__main__":
-    for i in range(10_000):
+    for i in range(40_000):
         episode()
         tracked_state.append([v for k, v in Q[track_convergence_for].items()])
         decay_exploration_rate()
@@ -137,12 +138,12 @@ if __name__ == "__main__":
         print(f'Action {action}')
     plt.show()
 
-    # plt.figure(figsize=(10, 5))
-    # plt.plot(scores)
-    # window_size = 500
-    # rolling_mean = np.convolve(scores, np.ones(window_size) / window_size, mode='valid')
-    # plt.plot(range(len(rolling_mean)), rolling_mean)
-    # plt.show()
+    plt.figure(figsize=(10, 5))
+    plt.plot(scores)
+    window_size = 500
+    rolling_mean = np.convolve(scores, np.ones(window_size) / window_size, mode='valid')
+    plt.plot(range(len(rolling_mean)), rolling_mean)
+    plt.show()
 
     with open('q_table.pkl', 'wb') as file:
         pickle.dump(Q, file)
