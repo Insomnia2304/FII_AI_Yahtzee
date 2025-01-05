@@ -8,13 +8,13 @@ python --version [3.12.7]
 -[WONT'FIX] Gasirea unei modalitati de a opri loop-ul de aruncare multipla a zarurilor din AI in cazul in care a ales deja toate zarurile
 -[DONE] Afisarea de scoruri potentiale (cu rosu) pentru fiecare casuta
 -[DONE] Adaugarea unui rand nou pentru Yahzee-uri multiple (bonusul)
+-[DONE] un grafic de convergenta
+-[DONE] modificarea AI-ului sa foloseasca Q-learning
+-[DONE] update reward function - reward=media scor nou-media scor vechi (ia in calcul doar scorurile necompletate)
 
-Q-learning
-    - * un grafic de convergenta
-    - modificarea AI-ului sa foloseasca Q-learning
-
-TO-DO
-- update reward function - reward=media scor nou-media scor vechi (ia in calcul doar scorurile necompletate) - sorin
-- AI tip of the day (arata cele mai bune 3 actiuni intr-un loc din joc) - sebi
-- integrare (duh) - ionut
-
+TO-DO:
+- Tema NLP: detectare limba, inlocuire cu sinonime, hipernime
+- Tip of the Day
+    - afiseaza sfat in functie de Q-Table (ex cele mai mari valori sunt la (0,0,1,0,1) si 2,
+                                            iar zarurile sunt 3,2 respectiv 1,5,4, le sortezi si zici sa pastreze 1,2,4 sau sa scoreze la Threes)
+- Istoric, chatbox
