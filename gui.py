@@ -124,17 +124,20 @@ class MyFrame(wx.Frame):
         self.Centre()
 
         self.tip_opened = False
+        self.tip_panel = None
+        self.tip_text = None
 
     def on_tip_button(self, event):
         self.tip_opened = not self.tip_opened
         self.show_tip()
 
     def show_tip(self):
+        print(self.tip_opened)
         if not self.tip_opened:
-            if hasattr(self, "tip_panel"):
-                self.tip_panel.Destroy()
+            if self.tip_panel:
+                self.tip_panel.Hide()
             return
-        
+
         if dice_rolls == -1:
             tip = "You haven't even rolled the dice, yet you want a tip?"
         else:
@@ -169,22 +172,26 @@ class MyFrame(wx.Frame):
             else:
                 tip = f'Unless you want to lose, you should score {uic.POINTS_TABLE_LABELS[action]}.'
 
-        self.tip_panel = wx.Panel(self.panel, pos=(80, 20), size=(900, 100))
-        self.tip_panel.SetBackgroundColour(wx.Colour(255, 255, 255))
+        if not self.tip_panel:
+            self.tip_panel = wx.Panel(self.panel, pos=(80, 20), size=(900, 100))
+            self.tip_panel.SetBackgroundColour(wx.Colour(255, 255, 255))
 
-        tip_text = wx.TextCtrl(
-            self.tip_panel,
-            value=tip,
-            pos=(10, 10),
-            size=(880, 80),
-            style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY | wx.BORDER_NONE
-        )
-        tip_text.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
-        tip_text.SetForegroundColour(wx.Colour(0, 0, 0))
-        tip_text.SetBackgroundColour(wx.Colour(255, 255, 255))
+            self.tip_text = wx.TextCtrl(
+                self.tip_panel,
+                value=tip,
+                pos=(10, 10),
+                size=(880, 80),
+                style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY | wx.BORDER_NONE
+            )
+            self.tip_text.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
+            self.tip_text.SetForegroundColour(wx.Colour(0, 0, 0))
+            self.tip_text.SetBackgroundColour(wx.Colour(255, 255, 255))
+        else:
+            self.tip_text.SetValue(tip)
 
         self.tip_panel.Show()
         self.panel.Layout()
+
 
     def update_dice_container(self, container: wx.BoxSizer, dice: list[int], keep=False):
         self.panel.Freeze()
