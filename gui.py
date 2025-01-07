@@ -123,25 +123,67 @@ class MyFrame(wx.Frame):
         self.SetTitle('Yahtzee')
         self.Centre()
 
-    def on_tip_button(self, event):
-        tips = [
-            "Tip 1: Try to get a Yahtzee early!",
-            "Tip 2: Save your high rolls for the upper section.",
-            "Tip 3: Aim for the full house if you have two pairs.",
-            "Tip 4: Don't forget about the small and large straights.",
-            "Tip 5: Use your rerolls wisely."
-        ]
-        tip = random.choice(tips)
-        self.show_tip(tip)
-        event.Skip()
+        self.tip_opened = False
 
-    def show_tip(self, tip):
-        tip_panel = wx.Panel(self.panel, pos=(80, 20), size=(900, 100))
-        tip_panel.SetBackgroundColour(wx.Colour(255, 255, 255))
-        tip_text = wx.StaticText(tip_panel, label=tip, pos=(10, 10))
+    def on_tip_button(self, event):
+        self.tip_opened = not self.tip_opened
+        self.show_tip()
+
+    def show_tip(self):
+        if not self.tip_opened:
+            if hasattr(self, "tip_panel"):
+                self.tip_panel.Destroy()
+            return
+        
+        if dice_rolls == -1:
+            tip = "You haven't even rolled the dice, yet you want a tip?"
+        else:
+            sorted_dice = sorted(dice + keep_dice)
+            action = choose_action(tuple(sorted_dice), 2 - dice_rolls, Q, state, player=0)
+            print(action)
+
+            if isinstance(action, tuple):
+                if sorted_dice.count(0) == 5:
+                    tip = 'You couldn\'t have rolled a worse hand. Just roll again all of them.'
+                else:
+                    to_roll = []
+                    to_keep = []
+                    for i in range(len(sorted_dice)):
+                        if action[i] == 0:
+                            to_roll.append(sorted_dice[i])
+                        else:
+                            to_keep.append(sorted_dice[i])
+                    tip = f'Just roll again {"the " if len(to_roll) == 1 else ""}{to_roll[0]}'
+                    for die in to_roll[1:-1]:
+                        tip += f', {die}'
+                    if len(to_roll) > 1:
+                        tip += f' and {to_roll[-1]}'
+                    tip += '.\n'
+
+                    tip += f'(Only keep {"the " if len(to_keep) == 1 else ""}{to_keep[0]}'
+                    for die in to_keep[1:-1]:
+                        tip += f', {die}'
+                    if len(to_keep) > 1:
+                        tip += f' and {to_keep[-1]}'
+                    tip += ')'
+            else:
+                tip = f'Unless you want to lose, you should score {uic.POINTS_TABLE_LABELS[action]}.'
+
+        self.tip_panel = wx.Panel(self.panel, pos=(80, 20), size=(900, 100))
+        self.tip_panel.SetBackgroundColour(wx.Colour(255, 255, 255))
+
+        tip_text = wx.TextCtrl(
+            self.tip_panel,
+            value=tip,
+            pos=(10, 10),
+            size=(880, 80),
+            style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY | wx.BORDER_NONE
+        )
         tip_text.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
         tip_text.SetForegroundColour(wx.Colour(0, 0, 0))
-        tip_panel.Show()
+        tip_text.SetBackgroundColour(wx.Colour(255, 255, 255))
+
+        self.tip_panel.Show()
         self.panel.Layout()
 
     def update_dice_container(self, container: wx.BoxSizer, dice: list[int], keep=False):
@@ -294,6 +336,8 @@ class MyFrame(wx.Frame):
         game.display_potential_scores(state, self, dice, keep_dice)
         self.game_info.Label = f"You can roll the dice {2 - dice_rolls} more times" if dice_rolls < 2 else "Please choose a category"
         self.vbox2.Layout()
+
+        self.show_tip()
         event.Skip()
 
     def on_key_press(self, event):

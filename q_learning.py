@@ -49,9 +49,9 @@ def init_q_table() -> dict:
     return Q
 
 
-def choose_action(sorted_dice, remaining_rolls, Q: dict, state: dict, exploration_chance=0.0) -> tuple[int, ...] | int:
+def choose_action(sorted_dice, remaining_rolls, Q: dict, state: dict, exploration_chance=0.0, player=1) -> tuple[int, ...] | int:
     if remaining_rolls == 0:
-        available_actions = [row for row in SCORE_ROWS if state['points_table'][1][row] == -1]
+        available_actions = [row for row in SCORE_ROWS if state['points_table'][player][row] == -1]
         if np.random.rand() < exploration_chance:
             return random.choice(available_actions)
         else:
@@ -107,7 +107,7 @@ scores = []
 track_convergence_for = (1,2,3,4,5)
 tracked_state = []
 if __name__ == "__main__":
-    for i in range(40_000):
+    for i in range(5000):
         episode()
         tracked_state.append([v for k, v in Q[track_convergence_for].items()])
         decay_exploration_rate()
