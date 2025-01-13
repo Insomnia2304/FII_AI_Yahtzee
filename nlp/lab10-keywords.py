@@ -4,7 +4,7 @@ import yake
 from lab10 import read_text_into_string
 
 if __name__ == "__main__":
-    language='ro'
+    language='en'
     max_ngram_size=2
     deduplication_threshold=0.9
     num_keywords=5
@@ -33,8 +33,8 @@ if __name__ == "__main__":
         for key_word in key_words:
             key_word = '"' + key_word + '"'
         key_words = ', '.join(key_words)
-        prompt = f'Generate a phrase with: {key_words}'
+        prompt = f'Generate a long phrase with: {key_words}.'
         input_ids = tokenizer(prompt, return_tensors="pt").input_ids
-        outputs = model.generate(input_ids,max_length=100)
+        outputs = model.generate(input_ids,max_length=200)
         result = tokenizer.decode(outputs[0], skip_special_tokens=True)
         print(f'Keywords: {kw[0]}\n\tGenerated text: {result}')

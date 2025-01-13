@@ -5,6 +5,7 @@ import stanza
 import spacy_stanza
 import matplotlib.pyplot as plt
 import transformers
+import langdetect
 
 def read_text_into_string(path: str) -> str:
     with open(path, 'rb') as file:
@@ -21,6 +22,10 @@ if __name__ == '__main__':
     nlp = spacy_stanza.load_pipeline('ro')
 
     text_str = read_text_into_string("text.txt")
+    detected_lang = langdetect.detect(text_str)
+    if detected_lang != 'ro':
+        print(f"Textul este în limba {detected_lang}")
+        exit(1)
     doc = nlp(text_str)
 
     for token in doc:
@@ -34,3 +39,4 @@ if __name__ == '__main__':
     plt.show()
     length_distribution.plot(15)
     plt.show()
+

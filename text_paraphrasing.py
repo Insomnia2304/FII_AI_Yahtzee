@@ -6,6 +6,8 @@ from nltk.corpus import wordnet as wn
 
 # incarca spacy pt romana
 try:
+    nltk.download('wordnet')
+    nltk.download('omw-1.4')
     nlp = spacy.load('ro_core_news_sm')
 except:
     import spacy.cli
@@ -73,7 +75,7 @@ def get_replacement(token, new_text, i):
     return token.text
 
 
-def paraphrase_text(text, change_threshold=0.8):
+def paraphrase_text(text, change_threshold=0.5):
     doc = nlp(text)
     tokens = [token.text for token in doc]
     new_text = tokens.copy()

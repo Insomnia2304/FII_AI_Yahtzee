@@ -1,16 +1,20 @@
 import random
+from datetime import datetime
+
 import wx
 import wx.grid
 import constants.constants as uic
 import game
 from game import update_score
-from game_history import GameHistoryFrame
+from game_history_window import GameHistoryFrame
 from utils import dice_utils
+from utils.game_history import *
 from utils.gui_utils import alert_user
 import pickle
 from q_learning import choose_action
 
 dice, keep_dice, state, dice_rolls = game.set_initial_state()
+history = get_history()
 
 with open('q_table.pkl', 'rb') as f:
     Q = pickle.load(f)
@@ -218,6 +222,9 @@ class MyFrame(wx.Frame):
         if game.is_final_state(state):
             alert_user(
                 f"Game Over!\nYou: {state['points_table'][0][uic.SCORE_ROW]}\nAI: {state['points_table'][1][uic.SCORE_ROW]}")
+            add_to_history(history, state['points_table'][0][uic.SCORE_ROW], state['points_table'][1][uic.SCORE_ROW],
+                           state['points_table'][0][uic.BONUS_ROW], datetime.now().strftime("%d/%m/%Y"))
+            save_history(history)
             self.reset_game()
             return
         dice = [1, 2, 3, 4, 5]
@@ -252,8 +259,7 @@ class MyFrame(wx.Frame):
         action = choose_action(tuple(sorted_dice), 2 - dice_rolls, Q, state)
         print(action)
         if isinstance(action, tuple):
-            dice, keep_dice = dice_utils.choose_dice_q(list(action), sorted_dice)
-            wx.CallLater(uic.AI_SLEEP_TIME, self.roll_dice_for_ai_2)
+            wx.CallLater(uic.AI_SLEEP_TIME, self.roll_dice_for_ai_2, action)
         else:
             wx.CallLater(uic.AI_SLEEP_TIME, update_score,state, self, action, 1, dice, keep_dice)
 
@@ -261,8 +267,10 @@ class MyFrame(wx.Frame):
         self.update_dice_container(self.keep_dice_container, keep_dice, keep=True)
 
     # pentru a putea arata cand AI-ul pastrează zaruri
-    def roll_dice_for_ai_2(self):
+    def roll_dice_for_ai_2(self, action: tuple):
         global dice, keep_dice, dice_rolls
+        sorted_dice = sorted(dice + keep_dice)
+        dice, keep_dice = dice_utils.choose_dice_q(list(action), sorted_dice)
 
         self.update_dice_container(self.dice_container, dice)
         self.update_dice_container(self.keep_dice_container, keep_dice, keep=True)
