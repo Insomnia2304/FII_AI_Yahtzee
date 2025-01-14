@@ -1,93 +1,35 @@
 Yahtzee is a classic dice game played with five dice, known for its blend of luck and strategy. The game is published by Hasbro and was originally developed by a Canadian couple in the early 20th century.
 
-Objective & Basic Gameplay
-Objective: Score the most points by rolling certain dice combinations across a series of turns.
-Number of Dice: 5 standard six-sided dice (values 1 through 6).
-Number of Rounds: The game consists of thirteen rounds.
-Turns per Round: On each turn, a player may roll the dice up to three times:
-First Roll: Roll all five dice.
-Second Roll (optional): Choose which dice to keep and re-roll the rest.
-Third Roll (optional): Again, choose which dice to keep and re-roll the others.
-After a maximum of three rolls per round, the player must assign their dice to an available category on their scorecard.
+The objective of yahtzee is to score the most points by rolling certain dice combinations across a series of turns.
+The game has 5 standard six-sided dices.
+The game consists of thirteen rounds.
+On each turn, a player may roll the dice up to three times:
+You can roll the dice up to three times on a turn to achieve the best possible combination.
 
-Scorecard & Categories
-There are thirteen categories—one for each round. Once a category is used, it cannot be used again. The categories are divided into two sections:
+There are thirteen categories—one for each rounde and once a category is used, it cannot be used again.
 
-Upper Section (Ones through Sixes):
+For ones category you have to get as many ones as possible.
+For twos category you have to get as many twos as possible.
+For threes category you have to get as many threes as possible.
+For fours category you have to get as many fours as possible.
+For fives category you have to get as many fives as possible.
+For sixes category you have to get as many sixes as possible.
 
-Ones: Score the sum of dice that show a 1.
-Twos: Score the sum of dice that show a 2.
-Threes: Score the sum of dice that show a 3.
-Fours: Score the sum of dice that show a 4.
-Fives: Score the sum of dice that show a 5.
-Sixes: Score the sum of dice that show a 6.
-Bonus: If the total of these six categories (1-6) is 63 or more, the player earns a 35-point bonus.
+For a full house you have to get three of a kind and a pair. Points are 25.
+For a small straight you have to get four sequential dice. Points are 30.
+For a large straight you have to get five sequential dice. Points are 40.
+For Yahtzee you have to get five dice with the same number. Points are 50.
+For chance you can roll anything. Points are the sum of the dice.
 
-Lower Section (Combination-based):
+The player with the highest total score wins.
 
-Three of a Kind: If at least three dice show the same number, score the sum of all five dice.
-Four of a Kind: If at least four dice show the same number, score the sum of all five dice.
-Full House: If the dice show three of one number and two of another, score 25 points.
-Small Straight: If the dice form a sequence of four consecutive values (e.g., 1-2-3-4, 2-3-4-5, or 3-4-5-6), score 30 points.
-Large Straight: If the dice form a sequence of five consecutive values (e.g., 1-2-3-4-5 or 2-3-4-5-6), score 40 points.
-Yahtzee: If all five dice show the same value (e.g., 2-2-2-2-2), score 50 points.
-Chance: Score the sum of all five dice, regardless of what they show.
-Important: A Yahtzee (all five dice the same) is one of the most prized rolls because it awards 50 points. Some rulesets also provide extra Yahtzee bonuses if you roll more than one Yahtzee in the same game, but that is an optional variation.
+The publisher of the game is Hasbro.
+The game was developed by a Canadian couple in the early 1900s (popularized around the 1950s).
 
-Ending the Game & Winning:
-After all thirteen rounds, each category on the scorecard will be filled exactly once. The player (or team) with the highest total score wins. Ties are broken by comparing each tied player’s final total once more, or by deciding on additional tiebreaker criteria (house rules may apply).
-
-Strategy & Common Questions:
-When to keep certain dice? Deciding which dice to hold and which to re-roll can make or break your score. For example, if you’re aiming for a Large Straight, you might keep a run of three consecutive numbers and re-roll the rest.
-Difference between Three of a Kind and Four of a Kind: Both categories score the sum of all five dice, but you need at least three matching dice for Three of a Kind, and at least four matching dice for Four of a Kind.
-Scoring in Chance: Use Chance when your dice don’t fit other categories, or to maximize your total if you roll high numbers across all five dice without forming a combination like Three of a Kind.
-Upper Section Bonus: A key part of strategy is aiming to get at least 63 points across Ones-Sixes to secure the 35-point bonus. 63 points typically equates to scoring an average of three marks per die face (for example, three 1s in the Ones category, three 2s in Twos, etc.).
-Full House Clarification: A Full House specifically requires 3 of one number + 2 of another. Example: 3-3-3 and 5-5. This always scores 25 points, no matter which numbers form the Full House.
-Yahtzee: Rolling all five dice the same value (e.g., 6-6-6-6-6). This is rare but scores 50 points. Some house rules let you score an additional bonus (100 points) if you roll more than one Yahtzee in the same game.
-Number of Rerolls: You can roll up to three times each turn, but you don’t have to use all three if you’re satisfied with your combination.
-Game Length: There are exactly thirteen rounds in a standard Yahtzee game—one for each category on the scorecard. After that, the game ends and you tally your final score.
-History
-Publisher: Hasbro.
-Origin: Developed by a Canadian couple in the early 1900s (popularized around the 1950s).
-Trivia: The name "Yahtzee" is a trademark of Hasbro, but similar dice games exist under different names or as variants.
-Common Examples:
-1.Example Roll for Large Straight: Rolling 2, 3, 4, 5, 6 (in any order) = 40 points in Large Straight.
-2.Example Roll for a Full House: Rolling 1, 1, 1, 2, 2 = 25 points in Full House.
-3.Example Roll for Three of a Kind: Rolling 2, 2, 2, 3, 5 = sum of all five dice, which is 2+2+2+3+5=14 points.
-4.Example Roll for Yahtzee: Rolling 6, 6, 6, 6, 6 = 50 points in Yahtzee.
-
-
-Frequently Asked Questions:
-What is Yahtzee?
-Yahtzee is a dice game in which you roll five dice to achieve certain scoring combinations over thirteen rounds. Each round, you can roll the dice up to three times and must assign your final roll to one of the thirteen categories, aiming for the highest total score possible.
-
-How many dice are used in Yahtzee?
-Five standard six-sided dice (faces numbered 1-6).
-
-How many total rounds are in the game?
 There are thirteen rounds—one per each category on the scorecard.
 
-How do I earn the Upper Section bonus?
-If you score a combined total of 63 or more across the six categories (Ones, Twos, Threes, Fours, Fives, Sixes), you get a 35-point bonus.
+If you score a combined total of 63 or more across the upper section, you get a 35-point bonus.
 
-What is a 'Small Straight' vs. a 'Large Straight'?
-
-A Small Straight is four consecutive values (e.g., 1-2-3-4, 2-3-4-5, or 3-4-5-6) for 30 points.
-A Large Straight is five consecutive values (1-2-3-4-5 or 2-3-4-5-6) for 40 points.
-What do I score if I roll three of a kind?
-Sum all five dice, as long as at least three are the same. Similarly, Four of a Kind requires at least four of the same number.
-
-What if I roll more than one Yahtzee in the same game?
-Officially, your first Yahtzee is worth 50 points. Additional Yahtzees may be counted as a bonus or placed in other unused categories—this depends on your chosen rule set or house rules.
-
-Is Yahtzee only a single-player game?
-Although the original game is designed for multiple players, this variant is a single-player version where you play against the computer.
-
-Where can I see my history of games?
-There is a special tab in the top-left corner where you can see your game history.
-
-What is the objective of Yahtzee?
-The objective is to score the most points by rolling specific dice combinations over thirteen rounds. Each round, you must assign your dice to one of the thirteen categories on the scorecard.
-
-Where can I get tips for playing Yahtzee?
-There are a number of tips shown at the top of the game screen based on the current state of the game.
+You get a joker for each additional Yahtzee you own.
+The opponent of a game is an AI made using q-learning.
+You can see your game history by pressing the "Game History" button.
