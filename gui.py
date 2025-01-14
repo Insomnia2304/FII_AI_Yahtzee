@@ -12,6 +12,7 @@ from utils.game_history import *
 from utils.gui_utils import alert_user
 import pickle
 from q_learning import choose_action
+import yahtzee_qa 
 
 dice, keep_dice, state, dice_rolls = game.set_initial_state()
 history = get_history()
@@ -82,7 +83,25 @@ class MyFrame(wx.Frame):
 
         self.grid = wx.grid.Grid(self.panel)
         self.make_table()
-        vbox1.Add(self.grid, proportion=1, flag=wx.CENTER, border=10)
+        vbox1.Add(self.grid, proportion=0, flag=wx.CENTER, border=0)
+
+        self.ask_chat = wx.TextCtrl(self.panel, style=wx.TE_PROCESS_ENTER | wx.TE_WORDWRAP | wx.TE_MULTILINE, size=(315, 70))
+        self.ask_chat.SetHint('Ask me anything related to Yahtzee')
+        vbox1.AddSpacer(20)
+        vbox1.Add(self.ask_chat, 0, wx.CENTER, 0)
+
+        self.resp_chat = wx.TextCtrl(self.panel, style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY | wx.BORDER_NONE, size=(315, 70))
+        vbox1.AddSpacer(20)
+        vbox1.Add(self.resp_chat, 0, wx.CENTER, 0)
+
+        scale = 27
+        send_img = wx.Image("./img/send.jpg", wx.BITMAP_TYPE_ANY).Scale(scale, scale)
+        self.send_button = wx.BitmapButton(self.panel, bitmap=wx.Bitmap(send_img), pos=(50, 497))
+        self.send_button.Bind(wx.EVT_BUTTON, self.on_enter)
+
+        erase_img = wx.Image("./img/erase.png", wx.BITMAP_TYPE_ANY).Scale(scale, scale)
+        self.erase_button = wx.BitmapButton(self.panel, bitmap=wx.Bitmap(erase_img), pos=(50, 532))
+        self.erase_button.Bind(wx.EVT_BUTTON, self.on_erase)
 
         self.vbox2 = wx.BoxSizer(wx.VERTICAL)
 
@@ -132,6 +151,16 @@ class MyFrame(wx.Frame):
         self.tip_panel = None
         self.tip_text = None
 
+    def on_enter(self, event):
+        text = self.ask_chat.GetValue()
+        # self.ask_chat.Clear()
+        self.resp_chat.SetValue(yahtzee_qa.answer_question(text))
+        return text
+
+    def on_erase(self, event):
+        self.ask_chat.Clear()
+        self.resp_chat.Clear()
+
     def on_tip_button(self, event):
         self.tip_opened = not self.tip_opened
         self.show_tip()
@@ -166,7 +195,7 @@ class MyFrame(wx.Frame):
                         tip += f', {die}'
                     if len(to_roll) > 1:
                         tip += f' and {to_roll[-1]}'
-                    tip += '.\n'
+                    tip += '. '
 
                     tip += f'(Only keep {"the " if len(to_keep) == 1 else ""}{to_keep[0]}'
                     for die in to_keep[1:-1]:
@@ -178,7 +207,7 @@ class MyFrame(wx.Frame):
                 tip = f'Unless you want to lose, you should score {uic.POINTS_TABLE_LABELS[action]}.'
 
         if not self.tip_panel:
-            self.tip_panel = wx.Panel(self.panel, pos=(80, 20), size=(900, 100))
+            self.tip_panel = wx.Panel(self.panel, pos=(80, 20), size=(900, 42))
             self.tip_panel.SetBackgroundColour(wx.Colour(255, 255, 255))
 
             self.tip_text = wx.TextCtrl(
@@ -186,7 +215,7 @@ class MyFrame(wx.Frame):
                 value=tip,
                 pos=(10, 10),
                 size=(880, 80),
-                style=wx.TE_MULTILINE | wx.TE_WORDWRAP | wx.TE_READONLY | wx.BORDER_NONE
+                style=wx.TE_READONLY | wx.BORDER_NONE
             )
             self.tip_text.SetFont(wx.Font(12, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD))
             self.tip_text.SetForegroundColour(wx.Colour(0, 0, 0))
