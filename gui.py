@@ -19,6 +19,7 @@ history = get_history()
 with open('q_table.pkl', 'rb') as f:
     Q = pickle.load(f)
 
+
 print(Q.keys())
 
 class MyFrame(wx.Frame):
@@ -222,8 +223,11 @@ class MyFrame(wx.Frame):
         if game.is_final_state(state):
             alert_user(
                 f"Game Over!\nYou: {state['points_table'][0][uic.SCORE_ROW]}\nAI: {state['points_table'][1][uic.SCORE_ROW]}")
-            add_to_history(history, state['points_table'][0][uic.SCORE_ROW], state['points_table'][1][uic.SCORE_ROW],
-                           state['points_table'][0][uic.BONUS_ROW], datetime.now().strftime("%d/%m/%Y"))
+            your_score = state['points_table'][0][uic.SCORE_ROW]
+            ai_score = state['points_table'][1][uic.SCORE_ROW]
+            bonus = state['points_table'][0][uic.BONUS_ROW]
+            yahtzee = state['points_table'][0][uic.YAHTZEE_ROW]
+            add_to_history(history, your_score, ai_score, bonus, yahtzee, datetime.now().strftime("%d/%m/%Y"))
             save_history(history)
             self.reset_game()
             return
@@ -368,6 +372,7 @@ class MyApp(wx.App):
         super().__init__(redirect, filename, useBestVisual, clearSigInt)
         self.frame = None
 
+
     def OnInit(self):
         self.frame = MyFrame(None)
         self.frame.Show(True)
@@ -377,3 +382,4 @@ class MyApp(wx.App):
 if __name__ == '__main__':
     app = MyApp(False)
     app.MainLoop()
+

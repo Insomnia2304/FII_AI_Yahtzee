@@ -1,11 +1,12 @@
 import json
 
 
-def add_to_history(game_history, your_score, ai_score, sum_bonus, date):
+def add_to_history(game_history, your_score, ai_score, sum_bonus, yahtzee, date):
     game_history.append({
         'your_score': your_score,
         'ai_score': ai_score,
         'sum_bonus': sum_bonus,
+        'yahtzee_bonus': yahtzee,
         'date': date
     })
 
