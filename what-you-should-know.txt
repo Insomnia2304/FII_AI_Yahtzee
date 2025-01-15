@@ -14,7 +14,7 @@ python --version [3.12.7]
 
 - [DONE] afiseaza sfat in functie de Q-Table (ex cele mai mari valori sunt la (0,0,1,0,1) si 2,
                                             iar zarurile sunt 3,2 respectiv 1,5,4, le sortezi si zici sa pastreze 1,2,4 sau sa scoreze la Threes)
-- Istoric, stats: eu
-- chat box: Sebi
-- implementare transformer + context: Sorin
+- [DONE] Istoric, stats: eu
+- [DONE] chat box: Sebi
+- [DONE] implementare transformer + context: Sorin
     https://huggingface.co/distilbert/distilbert-base-cased-distilled-squad
